@@ -88,6 +88,21 @@ services:
     depends_on:
       - elasticsearch
 
+  filebeat:
+    build:
+      context: filebeat/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    volumes:
+      - ./filebeat/config.yml:/usr/share/filebeat/filebeat.yml:ro,Z
+      - ./filebeat/rawlogs:/usr/share/filebeat/mylog:ro,Z
+    environment:
+      LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
+    networks:
+      - elk
+    depends_on:
+      - logstash
+
 networks:
   elk:
     driver: bridge

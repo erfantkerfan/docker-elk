@@ -1,0 +1,25 @@
+filebeat.config:
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+
+processors:
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+
+#----------------------- Logstash output -------------------------
+output.logstash: 
+  hosts: ["logstash:5044"]
+  username: 'logstash_internal'
+  password: '${LOGSTASH_INTERNAL_PASSWORD}'
+
+filebeat:
+  inputs:
+  - enabled: true
+    # json.add_error_key: true
+    # json.expand_keys: true
+    # json.keys_under_root: true
+    # json.overwrite_keys: true
+    paths:
+    - /usr/share/filebeat/mylog/*.log
+    type: log
